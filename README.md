@@ -1,2 +1,2 @@
 # text-detection
-This repository content our project for Kerja Praktik
+This repository contain our project for Kerja Praktik
