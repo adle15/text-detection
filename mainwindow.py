@@ -13,7 +13,7 @@ from PyQt5.uic import loadUi
 class tehseencode(QDialog):
     def __init__(self):
         super(tehseencode, self).__init__()
-        # loadUi("student3.ui",self)
+        # loadUi("mainwindow.ui",self)
         loadUi("mainwindow.ui", self)
 
         self.title = "Plate Number Recognition Prototype"
