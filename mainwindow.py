@@ -44,7 +44,7 @@ class tehseencode(QDialog):
                 cv2.waitKey()
                 if (self.logic == 2):
                     self.value = self.value + 1
-                    cv2.imwrite('C:/Users/sltnaldo/Pictures/Saved Pictures/%s.png' % (self.value), frame)
+                    cv2.imwrite('E:/Kuliah/KP/text-detection/%s.png' % (self.value), frame)
                     self.logic = 1
                     self.TEXT.setText('your Image have been Saved')
             else:
