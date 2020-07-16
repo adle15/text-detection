@@ -1,7 +1,12 @@
+import cv2
 import sys
 import numpy as np
+import imutils
+import pytesseract
+from PIL import ImageGrab
 
-import cv2
+pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
+
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5.QtCore import pyqtSlot
@@ -13,7 +18,7 @@ from PyQt5.uic import loadUi
 class tehseencode(QDialog):
     def __init__(self):
         super(tehseencode, self).__init__()
-        # loadUi("mainwindow.ui",self)
+        # loadUi("student3.ui",self)
         loadUi("mainwindow.ui", self)
 
         self.title = "Plate Number Recognition Prototype"
@@ -28,6 +33,10 @@ class tehseencode(QDialog):
         self.setWindowTitle(self.title)
         self.show()
 
+    def captureScreen(bbox=(300, 300, 1500, 1000)):
+        capScr = np.array(ImageGrab.grab(bbox))
+        capScr = cv2.cvtColor(capScr, cv2.COLOR_RGB2BGR)
+        return capScr
 
     @pyqtSlot()
     def onClicked(self):
@@ -38,19 +47,24 @@ class tehseencode(QDialog):
         while (cap.isOpened()):
             ret, frame = cap.read()
 
-            if ret == True:
-                print('here')
-                self.displayImage(frame, 1)
-                cv2.waitKey()
-                if (self.logic == 2):
-                    self.value = self.value + 1
-                    cv2.imwrite('E:/Kuliah/KP/text-detection/%s.png' % (self.value), frame)
-                    self.logic = 1
-                    self.TEXT.setText('your Image have been Saved')
-            else:
-                print('not found')
-        cap.release()
-        cv2.destroyAllWindows()
+            timer = cv2.getTickCount()
+            _, img = cap.read()
+
+            # img = captureScreen()
+            # DETECTING CHARACTERES
+            hImg, wImg, _ = img.shape
+            boxes = pytesseract.image_to_boxes(img)
+            for b in boxes.splitlines():
+                # print(b)
+                b = b.split(' ')
+                # print(b)
+                x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+                cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50, 50, 255), 2)
+                cv2.putText(img, b[0], (x, hImg - y + 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (50, 50, 255), 2)
+            fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
+            # cxv2.putText(img, str(int(fps)), (75, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (20,230,20), 2);
+            cv2.imshow("Result", img)
+            cv2.waitKey(1)
 
     def CaptureClicked(self):
         self.logic = 2
