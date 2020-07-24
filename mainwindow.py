@@ -41,11 +41,10 @@ class tehseencode(QDialog):
         # print(cap.read())
         while (cap.isOpened()):
             ret, frame = cap.read()
-            timer = cv2.getTickCount()
+
             if ret == True:
-                timer = cv2.getTickCount()
                 print('here')
-                self.displayImage(frame, 1)
+                timer = cv2.getTickCount()
                 hImg, wImg,_ = frame.shape
                 boxes = pytesseract.image_to_boxes(frame)
                 for b in boxes.splitlines():
@@ -55,7 +54,9 @@ class tehseencode(QDialog):
                     x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
                     cv2.rectangle(frame, (x,hImg- y), (w,hImg- h), (50, 50, 255), 2)
                     cv2.putText(frame,b[0],(x,hImg- y+25),cv2.FONT_HERSHEY_SIMPLEX,1,(50,50,255),2)
-                    cv2.waitKey()
+                fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
+                self.displayImage(frame, 1)
+                cv2.waitKey()
                 if (self.logic == 2):
                     self.value = self.value + 1
                     cv2.imwrite('E:/Kuliah/KP/text-detection/%s.png' % (self.value), frame)

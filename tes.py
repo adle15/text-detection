@@ -6,8 +6,8 @@ from PIL import ImageGrab
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
  
 cap = cv2.VideoCapture(0)
-cap.set(3,640)
-cap.set(4,480)
+cap.set(9,1280)
+cap.set(16,720)
 def captureScreen(bbox=(300,300,1500,1000)):
     capScr = np.array(ImageGrab.grab(bbox))
     capScr = cv2.cvtColor(capScr, cv2.COLOR_RGB2BGR)
